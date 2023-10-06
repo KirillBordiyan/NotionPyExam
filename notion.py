@@ -3,7 +3,7 @@ import datetime
 
 def save_notes(notes):
     with open('notion.json', "w", encoding='utf-8') as file:
-        json.dump(notes, file, ensure_ascii=False)
+        json.dump(notes, file, ensure_ascii=False, indent=1)
 
 def show_all():
     try:
