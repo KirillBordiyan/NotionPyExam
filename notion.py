@@ -2,12 +2,12 @@ import json
 import datetime
 
 def save_notes(notes):
-    with open('notes.json', "w", encoding='utf-8') as file:
+    with open('notion.json', "w", encoding='utf-8') as file:
         json.dump(notes, file, ensure_ascii=False)
 
 def show_all():
     try:
-        with open('notes.json', 'r', encoding='utf-8') as file:
+        with open('notion.json', 'r', encoding='utf-8') as file:
             notes = json.load(file)
             return notes
     except FileNotFoundError:
@@ -17,14 +17,16 @@ def show_all():
 def append_note():
     topic = input("Введите тему заметки: ")
     content = input("Введите содержание: ")
-    created_at = datetime.datetime.now().strftime("%%%") #########
-    update_at = created_at
+    created_date = datetime.date.today().strftime("%Y-%m-%d")
+    created_time = datetime.datetime.now().time().strftime("%H:%M:%S")
+    update_at = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     note = {
         'id': len(notes) + 1,
         'topic': topic,
         'content': content,
-        'created_at': created_at,#время 
+        'created_date': created_date, 
+        'created_time': created_time,
         'update_at': update_at
     }
 
@@ -67,7 +69,8 @@ def print_all(notes):
             print(f"ID: {note['id']}")
             print(f"Тема: {note['topic']}")
             print(f"Содержание: {note['content']}")
-            print(f"Дата создания: {note['created_at']}")
+            print(f"Дата создания: {note['created_date']}")
+            print(f"Время создания: {note['created_time']}")
             print(f"Дата последнего изменения: {note['update_at']}")
             print()
 
@@ -76,11 +79,11 @@ def select_notes():
     input_date = input("Введите дату (ГГГГ-ММ-ДД): ")
     try:
         date = datetime.datetime.strptime(input_date, "%Y-%m-%d")
-        selected_notes = [note for note in notes if note['created_at'] == date]
+        formatted_date = date.strftime("%Y-%m-%d")
+        selected_notes = [note for note in notes if note['created_date'] == formatted_date]
         print_all(selected_notes)
     except ValueError:
         print("Дата введенна неправильно")
-
 
 
 # entry point
